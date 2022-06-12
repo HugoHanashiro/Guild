@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Guild - Cadastro</title>
+</head>
+
+<body>
+    <div class="container singUpContainer">
+        <div class="signUpBoxContainer">
+            <div class="signUpBox">
+                <div class="signUpFieldsContainer">
+                    <label for="iptUsername">Nome de usuário:</label>
+                    <input type="text" id="iptUsername">
+                    <label for="iptEmail">E-mail:</label>
+                    <input type="email" id="iptEmail">
+                    <label for="iptPassword">Senha:</label>
+                    <input type="password" id="iptPassword">
+                    <label for="iptConfirmPassword">Confirme sua senha:</label>
+                    <input type="password" id="iptConfirmPassword">
+                </div>
+                <button id="btnSignUp" onclick="signUp()">Cadastrar</button>
+            </div>
+        </div>
+        <div class="signUpImageContainer">
+            <img src="./assets/sign-up_image.png" alt="Image of a girl playing a horror game">
+        </div>
+    </div>
+</body>
+<script>
+    function signUp() {
+        let nomeVar = document.getElementById('iptUsername').value;
+        let emailVar = document.getElementById('iptEmail').value;
+        let senhaVar = document.getElementById('iptPassword').value;
+        let confirmarSenhaVar = document.getElementById('iptConfirmPassword').value;
+
+        if (nomeVar == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'O campo "Nome de usuário" está vazio'
+            });
+        } else if (emailVar == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'O campo "E-mail" está vazio'
+            });
+        } else if (senhaVar == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'O campo "Senha" está vazio'
+            });
+        } else if (senhaVar != confirmarSenhaVar) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Os campos "Senha" e "Confirmar senha" contêm dados diferentes'
+            });
+        } else {
+            fetch("/usuarios/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    // crie um atributo que recebe o valor recuperado aqui
+                    // Agora vá para o arquivo routes/usuario.js
+                    nomeServer: nomeVar,
+                    emailServer: emailVar,
+                    senhaServer: senhaVar
+                })
+            }).then(resposta => {
+                if (resposta.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso',
+                        text: 'Usuário cadastrado com sucesso',
+                        timer: 2000
+                    }).then(function () {
+                        window.location.href = "sing-in.html";
+                    });
+
+                } else {
+                    resposta.json().then(respostaJSON => {
+                        if (respostaJSON.includes("Duplicate entry")) {
+                            if (respostaJSON.includes('nomeUsuario')) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro',
+                                    text: 'Esse nome de usuário já está cadastrado!'
+                                });
+                            }
+                            if (respostaJSON.includes('email')) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erro',
+                                    text: 'Esse e-mail já está cadastrado!'
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    }
+</script>
+
+</html>

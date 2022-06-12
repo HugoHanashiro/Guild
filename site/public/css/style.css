@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap');
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: #181818;
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+nav {
+    height: 70px;
+    width: 100%;
+    background-color: #000000;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+}
+
+nav .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+nav .logoContainer {
+    width: 100%;
+    height: 100%;
+}
+
+nav .navLeft,
+nav .navRight {
+    min-width: 150px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+nav .navLeft {
+    display: flex;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+nav .navLeft {
+    display: flex;
+    gap: 20px;
+}
+
+nav .navRight {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav img {
+    width: 150px;
+    height: 100%;
+}
+
+.container {
+    width: 80%;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+/* Sign-in page */
+
+.loginContainer {
+    display: flex;
+}
+
+.loginImageContainer {
+    width: 50%;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginImageContainer img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.loginBoxContainer {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+}
+
+.loginBox {
+    width: 350px;
+    height: 300px;
+    background-color: #454558;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.loginBox .loginFieldsContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.loginBox #btnSignIn {
+    width: 100%;
+    margin: auto;
+}
+
+.loginBox a {
+    color: #ffffff;
+}
+
+/* Sign Up page */
+.singUpContainer {
+    display: flex;
+}
+
+.signUpImageContainer {
+    width: 50%;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signUpImageContainer img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.signUpBoxContainer {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+}
+
+.signUpBox {
+    width: 350px;
+    height: auto;
+    background-color: #454558;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.signUpBox .signUpFieldsContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.signUpBox #btnSignUp {
+    width: 100%;
+    margin: auto;
+}
+
+.signUpBox a {
+    color: #ffffff;
+}
+
+/* Games page */
+
+.containerCaixaPesquisa {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.searchBox {
+    background-color: rgba(69, 69, 88, 255);
+    border-radius: 8px;
+    width: 634px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+}
+
+.searchBox #iptSearch {
+    /* opacity: 0.2; */
+    border-radius: 8px;
+    border: none;
+    background-color: #454558;
+    color: #ffffff;
+    height: 90%;
+    width: 100%;
+    font-size: 18px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.searchBox img {
+    width: 30px;
+    height: 30px;
+}
+
+.searchBox button {
+    height: 100%;
+    background-color: transparent;
+    border: none;
+}
+
+.gameList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    /* flex-direction: column; */
+    background-color: #202020;
+    box-sizing: border-box;
+    padding: 25px 0px;
+    border-radius: 10px;
+}
+
+.gameList .game {
+    width: 200px;
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    /* background-color: #333333; */
+    box-sizing: border-box;
+    /* padding: 10px; */
+    border-radius: 5px;
+    color: white;
+    box-shadow: 5px 10px 8px #000000;
+}
+
+.game .imageContainer {
+    height: 55%;
+    width: 100%;
+    /* background-color: red; */
+}
+
+.game .imageContainer img {
+    height: 100%;
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.game .gameInfoContainer {
+    height: 45%;
+    box-sizing: border-box;
+    padding: 10px;
+    background: rgb(51, 51, 51);
+    background: linear-gradient(0deg, rgba(51, 51, 51, 1) 0%, rgba(51, 51, 51, 1) 65%, rgba(51, 51, 51, 0) 100%);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerButtons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

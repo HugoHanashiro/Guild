@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guild</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+</head>
+
+<body onload="listPopularGames();">
+    <!-- <button onclick="getGames()">addsads</button> -->
+    <nav>
+        <div class="container">
+            <div class="navLeft">
+                <a href="./index.html">
+                    <div class="logoContainer">
+                        <img src="./assets/logos/left_white_no-bg.png" alt="">
+                    </div>
+                </a>
+                <ul>
+                    <li><a href="#">Perfil</a></li>
+                    <li><a href="#">Seguindo</a></li>
+                </ul>
+            </div>
+            <div class="navRight">
+                <ul>
+                    <li>
+                        item 1
+                    </li>
+                    <li>item 2</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="containerCaixaPesquisa">
+            <div class="searchBox">
+                <input type="text" id="iptSearch" placeholder="Digite algum jogo para pesquisar...">
+                <button onclick="search()"><img src="./assets/lupa.png" alt="ícone de lupa"></button>
+            </div>
+        </div>
+        <div class="gameList">
+            <!-- <div class="game">
+                <div class="imageContainer">
+                    <img src="https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg"
+                        alt="Game background image" width="100px" height="100px">
+                </div>
+                <div class="gameInfoContainer">
+                    <div class="gameTitle">Grand Theft Auto V</div>
+                    <div class="gameMetacritic">90</div>
+                </div>
+            </div> -->
+        </div>
+        <div class="containerButtons">
+            <button onclick="loadPreviousPage()" id="btnPreviousPage">Anterior</button>
+            <button onclick="loadNextPage()" id="btnNextPage">Próxima</button>
+        </div>
+    </div>
+</body>
+<script>
+    const URL_STANDARD = "https://api.rawg.io/api/games?key=5b06bc2830814ff68b37e463110cdf72&page_size=30";
+    let nextPageUrl = null;
+    let previousPageUrl = null;
+
+    document.getElementById('iptSearch').addEventListener('keydown', event => {
+        if (event.key === "Enter" && document.getElementById('iptSearch').value != "") {
+            search();
+        }
+    })
+
+    function listPopularGames() {
+        listGames(URL_STANDARD);
+    }
+
+    function listGames(URL) {
+        getGames(URL).then(response => {
+            nextPageUrl = response.next;
+            previousPageUrl = response.previous;
+            if(nextPageUrl == null) {
+                document.getElementById('btnNextPage').setAttribute('disabled', 'true');
+            } else {
+                document.getElementById('btnNextPage').removeAttribute('disabled');
+            }
+            if(previousPageUrl == null) {
+                document.getElementById('btnPreviousPage').setAttribute('disabled', 'true');
+            } else {
+                document.getElementById('btnPreviousPage').removeAttribute('disabled');
+            }
+            response.results.forEach(gameOnList => {
+                renderGame(gameOnList);
+            })
+        })
+    }
+
+    async function getGames(url) {
+        const fetchResponse = await fetch(url);
+        let responseJSON = await fetchResponse.json();
+        return responseJSON;
+    }
+
+    function renderGame(game) {
+        let gameList = document.getElementsByClassName('gameList')[0];
+
+        let gameElement = document.createElement('div');
+        gameElement.classList.add('game');
+        gameList.appendChild(gameElement);
+
+        let imageContainer = document.createElement('div');
+        imageContainer.classList.add('imageContainer');
+        gameElement.appendChild(imageContainer);
+
+        let gameInfoContainer = document.createElement('div');
+        gameElement.appendChild(gameInfoContainer);
+
+        let imageElement = document.createElement('img');
+        let gameTitle = document.createElement('div');
+        let gameMetacritic = document.createElement('div');
+
+        imageElement.src = game.background_image; //IMAGEM - DINÂMICO
+        gameTitle.textContent = game.name;//TÍTULO - DINÂMICO
+        gameMetacritic.textContent = game.metacritic;//METACRITIC - DINÂMICO
+
+        gameInfoContainer.classList.add('gameInfoContainer');
+        gameTitle.classList.add('gameTitle');
+        gameMetacritic.classList.add('gameMetacritic');
+
+        imageContainer.appendChild(imageElement);
+        gameInfoContainer.appendChild(gameTitle);
+        gameInfoContainer.appendChild(gameMetacritic);
+    }
+
+    function search() {
+        let searchQuery = document.getElementById('iptSearch').value;
+        let searchUrl = URL_STANDARD + `&search_precise=true&search=${searchQuery}`;
+
+        // nextPageUrl = null;
+        // previousPageUrl = null;
+
+        emptyGameList();
+        listGames(encodeURI(searchUrl));
+    }
+
+    function emptyGameList() {
+        document.getElementsByClassName('gameList')[0].innerHTML = "";
+    }
+
+    function loadNextPage() {
+        emptyGameList();
+        listGames(nextPageUrl)
+    }
+
+    function loadPreviousPage() {
+        emptyGameList();
+        listGames(previousPageUrl);
+    }
+
+</script>
+
+</html>
