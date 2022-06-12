@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Guild - Login</title>
+</head>
+
+<body>
+    <div class="container loginContainer">
+        <div class="loginImageContainer">
+            <img src="./assets/sign-in_image.png" alt="Image of a girl playing a horror game">
+        </div>
+        <div class="loginBoxContainer">
+            <div class="loginBox">
+                <div class="loginFieldsContainer">
+                    <label for="iptEmail">E-mail</label>
+                    <input type="email" id="iptEmail">
+                    <label for="iptPassword">Senha</label>
+                    <input type="password" id="iptPassword">
+                </div>
+                <button id="btnSignIn" onclick="signIn();">Entrar</button>
+                <a href="./sign-up.html">Faça o cadastro</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function signIn() {
+        let emailVar = document.getElementById('iptEmail').value;
+        let senhaVar = document.getElementById('iptPassword').value;
+
+        if (emailVar == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'O campo "E-mail" está vazio'
+            });
+            return;
+        }
+        if (senhaVar == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'O campo "Senha" está vazio'
+            });
+            return;
+        }
+        fetch('/usuarios/autenticar', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(respostaJSON => {
+                    sessionStorage.setItem('idUsuario', respostaJSON.idUsuario);
+                    sessionStorage.setItem('nomeUsuario', respostaJSON.nomeUsuario);
+                    sessionStorage.setItem('email', respostaJSON.email);
+
+                    console.log("id" + sessionStorage.getItem('idUsuario'));
+                    console.log("nome" + sessionStorage.getItem('nomeUsuario'));
+                    console.log("email" + sessionStorage.getItem('email'));
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso',
+                        text: 'Usuário autenticado com sucesso!',
+                        timer: 10000,
+                        willClose: function() {
+                            window.location = "./index.html";
+                        }
+                    });
+                })
+            } else {
+                Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o login. Veirifique suas credenciais e tente novamente'
+            });
+            }
+        })
+    }
+</script>
+
+</html>
