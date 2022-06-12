@@ -21,16 +21,13 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="#">Perfil</a></li>
-                    <li><a href="#">Seguindo</a></li>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Jogos</a></li>
                 </ul>
             </div>
             <div class="navRight">
                 <ul>
-                    <li>
-                        item 1
-                    </li>
-                    <li>item 2</li>
+                    <li>Perfil</li>
                 </ul>
             </div>
         </div>
@@ -43,16 +40,6 @@
             </div>
         </div>
         <div class="gameList">
-            <!-- <div class="game">
-                <div class="imageContainer">
-                    <img src="https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg"
-                        alt="Game background image" width="100px" height="100px">
-                </div>
-                <div class="gameInfoContainer">
-                    <div class="gameTitle">Grand Theft Auto V</div>
-                    <div class="gameMetacritic">90</div>
-                </div>
-            </div> -->
         </div>
         <div class="containerButtons">
             <button onclick="loadPreviousPage()" id="btnPreviousPage">Anterior</button>
@@ -62,6 +49,7 @@
 </body>
 <script>
     const URL_STANDARD = "https://api.rawg.io/api/games?key=5b06bc2830814ff68b37e463110cdf72&page_size=30";
+    const API_KEY = "5b06bc2830814ff68b37e463110cdf72";
     let nextPageUrl = null;
     let previousPageUrl = null;
 
@@ -106,6 +94,9 @@
 
         let gameElement = document.createElement('div');
         gameElement.classList.add('game');
+        gameElement.addEventListener('click', function() {
+            window.location = `game.html?gameId=${game.id}`;
+        })
         gameList.appendChild(gameElement);
 
         let imageContainer = document.createElement('div');

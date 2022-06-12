@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <title>Guild</title>
+</head>
+
+<body onload="getGameDetails()">
+    <nav>
+        <div class="container">
+            <div class="navLeft">
+                <a href="./index.html">
+                    <div class="logoContainer">
+                        <img src="./assets/logos/left_white_no-bg.png" alt="">
+                    </div>
+                </a>
+                <ul>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Jogos</a></li>
+                </ul>
+            </div>
+            <div class="navRight">
+                <ul>
+                    <li>Perfil</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container containerGameDetails">
+        <div class="gameDetailsContainer">
+            <div class="gameDetailsImageContainer"></div>
+            <div class="gameDetailsContainerBottom">
+                <div class="gameDetailsInfo"></div>
+                <div class="gameDetailsStatus">
+                    <h3>Status do jogo:</h3>
+                    <input type="radio" name="gameStatus" value="beaten" id="gameStatusBeaten">
+                    <label for="gameStatusBeaten">Terminado</label><br>
+                    <input type="radio" name="gameStatus" value="always" id="gameStatusAlways">
+                    <label for="gameStatusAlways">Sempre jogo</label><br>
+                    <input type="radio" name="gameStatus" value="playing" id="gameStatusPlaying">
+                    <label for="gameStatusPlaying">Jogando</label><br>
+                    <input type="radio" name="gameStatus" value="played" id="gameStatusPlayed">
+                    <label for="gameStatusPlayed">Já joguei, mas não terminei</label><br>
+                    <input type="radio" name="gameStatus" value="wish" id="gameStatusWish">
+                    <label for="gameStatusWish">Quero jogar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const API_KEY = "5b06bc2830814ff68b37e463110cdf72";
+    let gameId = "";
+    async function getGameDetails() {
+        const params = new URLSearchParams(window.location.search);
+        if(params.has('gameId')){
+            gameId = params.get('gameId');
+            const URL = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
+            let response = await fetch(URL);
+            let responseJSON = await response.json();
+            // console.log(responseJSON);
+            renderGame(responseJSON);
+        } else {
+            window.location = "./games.html"
+        }
+    }
+
+    function renderGame(gameParam) {
+        let imageContainerElement = document.getElementsByClassName('gameDetailsImageContainer')[0];
+        let gameDetailsInfoElement = document.getElementsByClassName('gameDetailsInfo')[0];
+
+        let imageElement = document.createElement('img');
+        imageElement.src = gameParam.background_image;
+        imageContainerElement.appendChild(imageElement);
+
+        let gamePlatformList = [];
+
+        for (let index = 0; index < gameParam.platforms.length; index++) {
+            gamePlatformList.push(gameParam.platforms[index].platform.name);
+        }
+
+        let detailsString = `
+        <b>Título:</b> ${gameParam.name}<br><br>
+        <b>Plataformas:</b> ${gamePlatformList}<br><br>
+        <b>Descrição:</b> ${gameParam.description}
+        `;
+
+        gameDetailsInfoElement.innerHTML = detailsString;
+    }
+
+    function getRadioValue() {
+        if(document.querySelector('input[name="gameStatus"]:checked') != null) {
+            console.log(document.querySelector('input[name="gameStatus"]:checked').value);
+        } else {
+            console.log("nulo")
+        }
+    }
+</script>
+</html>

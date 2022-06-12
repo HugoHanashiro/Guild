@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,21 +9,25 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="./assets/logos/icone-no-bg.png">
 </head>
+
 <body onload="teste();">
     <h1>index!</h1>
     <span id="spnMsg"></span>
+    <a href="games.html">Games</a>
 </body>
 <script>
     function teste() {
         let idUsuario = sessionStorage.getItem('idUsuario');
 
-        if(idUsuario == null) {
+        if (idUsuario == null) {
             spnMsg.innerHTML = "Usuário não está logado<br>";
             console.log(`id do usuário: ${idUsuario}`);
+            window.location = "./sing-in.html";
         } else {
             spnMsg.innerHTML = "Usuário está logado";
             console.log(`id do usuário: ${idUsuario}`);
         }
     }
 </script>
+
 </html>
