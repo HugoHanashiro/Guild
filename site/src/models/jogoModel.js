@@ -40,9 +40,29 @@ function listarMeusJogos(idUsuario) {
     return database.executar(instrucao);
 }
 
+function getIdRegistro(idUsuario, idJogo) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function getIdRegistro()", idUsuario, idJogo);
+    var instrucao = `
+        SELECT idRegistro FROM Usuario_Jogo WHERE fkUsuario = ${idUsuario} AND idJogo = ${idJogo};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function cadastrarGenero(idRegistro, genero) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrarGenero()", idRegistro, genero);
+    var instrucao = `
+        INSERT INTO Genero (fkRegistro, nomeGenero) VALUES (${idRegistro}, '${genero}');
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
 module.exports = {
     pegarStatus,
     cadastrarStatus,
     atualizarStatus,
-    listarMeusJogos
+    listarMeusJogos,
+    getIdRegistro,
+    cadastrarGenero
 };

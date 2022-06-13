@@ -377,7 +377,7 @@ nav img {
 /* My Games */
 
 .containerMyGames {
-    height: 100vh;
+    min-height: 100vh;
     background-color: #333333;
     margin-top: 20px;
     margin-bottom: 20px;

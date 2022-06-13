@@ -38,6 +38,7 @@ CREATE TABLE Comentario (
 );
 
 CREATE TABLE Usuario_Jogo (
+	idRegistro INT PRIMARY KEY AUTO_INCREMENT,
 	fkUsuario INT,
     CONSTRAINT Usuario_Jogo_fkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
     idJogo INT,
@@ -63,3 +64,11 @@ CREATE TABLE Seguidor_Seguido (
     FOREIGN KEY (fkSeguido) REFERENCES Usuario(idUsuario),
     PRIMARY KEY (fkSeguidor, fkSeguido)
 );
+
+CREATE TABLE Genero (
+	fkUsuario INT,
+    fkJogo INT,
+    FOREIGN KEY (fkUsuario) REFERENCES Usuario_Jogo(fkUsuario),
+    FOREIGN KEY (fkJogo) REFERENCES Usuario_Jogo(idJogo),
+    nomeGenero VARCHAR(30)
+)

@@ -20,4 +20,12 @@ router.post("/listarMeusJogos", function (req, res) {
     jogoController.listarMeusJogos(req, res);
 })
 
+router.post("/getIdRegistro", function (req, res) {
+    jogoController.getIdRegistro(req, res);
+})
+
+router.post("/cadastrarGenero", function (req, res) {
+    jogoController.cadastrarGenero(req, res);
+})
+
 module.exports = router;

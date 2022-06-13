@@ -24,7 +24,7 @@
                     <li><a href="./index.html">Início</a></li>
                     <li><a href="./games.html">Jogos</a></li>
                 </ul>
-                <button onclick="getGameStatus()">Testar</button>
+                <button onclick="registerGenres()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -65,6 +65,7 @@
     const API_KEY = "5b06bc2830814ff68b37e463110cdf72";
     let gameId = "";
     let gameStatusNow = "";
+    let gameGenres = [];
 
     if (params.has('gameId')) {
         gameId = params.get('gameId');
@@ -77,6 +78,7 @@
         let response = await fetch(URL);
         let responseJSON = await response.json();
         // console.log(responseJSON);
+        gameGenres = responseJSON.genres;
         renderGame(responseJSON);
         getGameStatus();
     }
@@ -160,8 +162,9 @@
                 })
             }).then(resultado => {
                 // console.log(`Resultado do cadastro: ${JSON.stringify(resultado)}`);
-                if(resultado.ok) {
+                if (resultado.ok) {
                     gameStatusNow = newGameStatus;
+                    registerGenres();
                     // console.log(`setando o gameStatusNow: ${gameStatusNow}`);
                 } else {
                     console.log("resultado não está ok");
@@ -183,6 +186,38 @@
                 // console.log(`Resultado da atualização: ${JSON.stringify(resultado)}`);
             })
         }
+    }
+
+    function registerGenres() {
+
+        fetch('/jogos/getIdRegistro', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.getItem('idUsuario'),
+                idJogoServer: gameId
+            })
+        }).then(resposta => {
+            resposta.json().then(respostaJSON => {
+                console.log(`id do registro ${respostaJSON[0].idRegistro}`);
+                let idRegistroVar = respostaJSON[0].idRegistro;
+
+                gameGenres.forEach(gameGenre => {
+                    fetch('/jogos/cadastrarGenero', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            idRegistroServer: idRegistroVar,
+                            generoServer: gameGenre.name
+                        })
+                    })
+                })
+            })
+        })
     }
 </script>
 

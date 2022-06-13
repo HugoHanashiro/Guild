@@ -116,10 +116,64 @@ function listarMeusJogos(request, response) {
     }
 }
 
+function getIdRegistro(request, response) {
+    let idUsuario = request.body.idUsuarioServer;
+    let idJogo = request.body.idJogoServer;
+
+    if (idUsuario == undefined) {
+        response.status(400).send("Seu idUsuario está undefined!");
+    } else if (idJogo == undefined) {
+        response.status(400).send("Seu idJogo está undefined!");
+    } else {
+        jogoModel.getIdRegistro(idUsuario, idJogo).then(
+            function (resultado) {
+                response.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao obter o idRegistro! Erro: ",
+                    erro.sqlMessage
+                );
+                response.status(500).json(erro.sqlMessage);
+            }
+        );
+    }
+}
+
+function cadastrarGenero(request, response) {
+    let idRegistro = request.body.idRegistroServer;
+    let genero = request.body.generoServer;
+
+    if (idRegistro == undefined) {
+        response.status(400).send("Seu idRegistro está undefined!");
+    } else if (genero == undefined) {
+        response.status(400).send("Seu genero está undefined!");
+    } else {
+        jogoModel.cadastrarGenero(idRegistro, genero).then(
+            function (resultado) {
+                response.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao cadastrar o gênero! Erro: ",
+                    erro.sqlMessage
+                );
+                response.status(500).json(erro.sqlMessage);
+            }
+        );
+    }
+}
+
 module.exports = {
     pegarStatus,
     testar,
     cadastrarStatus,
     atualizarStatus,
-    listarMeusJogos
+    listarMeusJogos,
+    getIdRegistro,
+    cadastrarGenero
 }
