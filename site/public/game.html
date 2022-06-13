@@ -20,9 +20,10 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Jogos</a></li>
+                    <li><a href="./index.html">Início</a></li>
+                    <li><a href="./games.html">Jogos</a></li>
                 </ul>
+                <button onclick="getGameStatus()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -38,15 +39,20 @@
                 <div class="gameDetailsInfo"></div>
                 <div class="gameDetailsStatus">
                     <h3>Status do jogo:</h3>
-                    <input type="radio" name="gameStatus" value="beaten" id="gameStatusBeaten">
+                    <input type="radio" name="gameStatus" value="beaten" id="gameStatusBeaten"
+                        onclick="setGameStatus('beaten')">
                     <label for="gameStatusBeaten">Terminado</label><br>
-                    <input type="radio" name="gameStatus" value="always" id="gameStatusAlways">
+                    <input type="radio" name="gameStatus" value="always" id="gameStatusAlways"
+                        onclick="setGameStatus('always')">
                     <label for="gameStatusAlways">Sempre jogo</label><br>
-                    <input type="radio" name="gameStatus" value="playing" id="gameStatusPlaying">
+                    <input type="radio" name="gameStatus" value="playing" id="gameStatusPlaying"
+                        onclick="setGameStatus('playing')">
                     <label for="gameStatusPlaying">Jogando</label><br>
-                    <input type="radio" name="gameStatus" value="played" id="gameStatusPlayed">
+                    <input type="radio" name="gameStatus" value="played" id="gameStatusPlayed"
+                        onclick="setGameStatus('played')">
                     <label for="gameStatusPlayed">Já joguei, mas não terminei</label><br>
-                    <input type="radio" name="gameStatus" value="wish" id="gameStatusWish">
+                    <input type="radio" name="gameStatus" value="wish" id="gameStatusWish"
+                        onclick="setGameStatus('wish')">
                     <label for="gameStatusWish">Quero jogar</label>
                 </div>
             </div>
@@ -54,20 +60,24 @@
     </div>
 </body>
 <script>
+    const params = new URLSearchParams(window.location.search);
     const API_KEY = "5b06bc2830814ff68b37e463110cdf72";
     let gameId = "";
+    let gameStatusNow = "";
+
+    if (params.has('gameId')) {
+        gameId = params.get('gameId');
+    } else {
+        window.location = "./games.html";
+    }
+
     async function getGameDetails() {
-        const params = new URLSearchParams(window.location.search);
-        if(params.has('gameId')){
-            gameId = params.get('gameId');
-            const URL = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
-            let response = await fetch(URL);
-            let responseJSON = await response.json();
-            // console.log(responseJSON);
-            renderGame(responseJSON);
-        } else {
-            window.location = "./games.html"
-        }
+        const URL = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
+        let response = await fetch(URL);
+        let responseJSON = await response.json();
+        // console.log(responseJSON);
+        renderGame(responseJSON);
+        getGameStatus();
     }
 
     function renderGame(gameParam) {
@@ -89,16 +99,135 @@
         <b>Plataformas:</b> ${gamePlatformList}<br><br>
         <b>Descrição:</b> ${gameParam.description}
         `;
-
         gameDetailsInfoElement.innerHTML = detailsString;
     }
 
-    function getRadioValue() {
-        if(document.querySelector('input[name="gameStatus"]:checked') != null) {
-            console.log(document.querySelector('input[name="gameStatus"]:checked').value);
+    function getGameStatus() {
+        fetch('/jogos/listar', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.getItem('idUsuario'),
+                idJogoServer: gameId
+            })
+        }).then(resposta => {
+            if (resposta.ok) {
+                // console.log(resposta);
+                // setRadioValue();
+
+                //update
+                resposta.json().then(respostaJSON => {
+                    gameStatusNow = respostaJSON.statusUsuarioJogo;
+
+                    // console.log(`Resultado retornado: ${JSON.stringify(respostaJSON)}`);
+                    setRadioValue();
+                })
+            } else {
+                //insert
+                console.log("Nenhum status para esse jogo foi encontrado");
+            }
+        })
+    }
+
+    function setRadioValue() {
+        let radioButtons = document.getElementsByName('gameStatus');
+        radioButtons.forEach(radioButton => {
+            if (radioButton.value == gameStatusNow) {
+                radioButton.checked = true;
+            }
+        })
+    }
+
+    // function getRadioValue() {
+    //     if (document.querySelector('input[name="gameStatus"]:checked') != null) {
+    //         console.log(document.querySelector('input[name="gameStatus"]:checked').value);
+    //     } else {
+    //         console.log("nulo")
+    //     }
+    // }
+
+    function setGameStatus(newGameStatus) {
+        // console.log(`newGameStatus: ${newGameStatus}`);
+        if (gameStatusNow == "") {
+            // console.log('vou dar insert');
+            fetch('/jogos/cadastrarStatus', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idUsuarioServer: sessionStorage.getItem('idUsuario'),
+                    idJogoServer: gameId,
+                    statusServer: newGameStatus
+                })
+            }).then(resultado => {
+                // console.log(`Resultado do cadastro: ${JSON.stringify(resultado)}`);
+                if(resultado.ok) {
+                    gameStatusNow = newGameStatus;
+                    // console.log(`setando o gameStatusNow: ${gameStatusNow}`);
+                } else {
+                    console.log("resultado não está ok");
+                }
+            })
         } else {
-            console.log("nulo")
+            // console.log('vou dar update');
+            fetch('/jogos/atualizarStatus', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idUsuarioServer: sessionStorage.getItem('idUsuario'),
+                    idJogoServer: gameId,
+                    statusServer: newGameStatus
+                })
+            }).then(resultado => {
+                // console.log(`Resultado da atualização: ${JSON.stringify(resultado)}`);
+            })
         }
+
+
+        // fetch('/jogos/autenticar', {
+        // method: "POST",
+        // headers: {
+        //     "Content-Type": "application/json"
+        // },
+        // body: JSON.stringify({
+        //     emailServer: emailVar,
+        //     senhaServer: senhaVar
+        // })
+        // }).then(resposta => {
+        //     if (resposta.ok) {
+        //         resposta.json().then(respostaJSON => {
+        //             sessionStorage.setItem('idUsuario', respostaJSON.idUsuario);
+        //             sessionStorage.setItem('nomeUsuario', respostaJSON.nomeUsuario);
+        //             sessionStorage.setItem('email', respostaJSON.email);
+
+        //             console.log("id" + sessionStorage.getItem('idUsuario'));
+        //             console.log("nome" + sessionStorage.getItem('nomeUsuario'));
+        //             console.log("email" + sessionStorage.getItem('email'));
+
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: 'Sucesso',
+        //                 text: 'Usuário autenticado com sucesso!',
+        //                 timer: 10000,
+        //                 willClose: function () {
+        //                     window.location = "./index.html";
+        //                 }
+        //             });
+        //         })
+        //     } else {
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'Erro',
+        //             text: 'Houve um erro ao realizar o login. Veirifique suas credenciais e tente novamente'
+        //         });
+        //     }
+        // })
     }
 </script>
+
 </html>

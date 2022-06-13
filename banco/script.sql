@@ -41,7 +41,7 @@ CREATE TABLE Usuario_Jogo (
 	fkUsuario INT,
     CONSTRAINT Usuario_Jogo_fkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
     idJogo INT,
-    PRIMARY KEY (fkUsuario, idJogo),
+    UNIQUE (fkUsuario, idJogo),
     statusUsuarioJogo VARCHAR(15) NOT NULL
 );
 
