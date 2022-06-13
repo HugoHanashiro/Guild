@@ -42,7 +42,9 @@ CREATE TABLE Usuario_Jogo (
     CONSTRAINT Usuario_Jogo_fkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
     idJogo INT,
     UNIQUE (fkUsuario, idJogo),
-    statusUsuarioJogo VARCHAR(15) NOT NULL
+    statusUsuarioJogo VARCHAR(15) NOT NULL,
+    imagem VARCHAR(2048),
+    titulo VARCHAR(200)
 );
 
 CREATE TABLE Critica (
@@ -52,4 +54,12 @@ CREATE TABLE Critica (
     PRIMARY KEY(idCritica, fkUsuario),
     nota DECIMAL(2,1) NOT NULL,
     texto TEXT(500)
+);
+
+CREATE TABLE Seguidor_Seguido (
+	fkSeguidor INT,
+    fkSeguido INT,
+    FOREIGN KEY (fkSeguidor) REFERENCES Usuario(idUsuario),
+    FOREIGN KEY (fkSeguido) REFERENCES Usuario(idUsuario),
+    PRIMARY KEY (fkSeguidor, fkSeguido)
 );

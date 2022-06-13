@@ -7,7 +7,7 @@ function testar(req, res) {
     res.json("ESTAMOS FUNCIONANDO!");
 }
 
-function listar(request, response) {
+function pegarStatus(request, response) {
     let idUsuario = request.body.idUsuarioServer;
     let idJogo = request.body.idJogoServer;
 
@@ -16,7 +16,7 @@ function listar(request, response) {
     } else if (idJogo == undefined) {
         res.status(400).send("Seu idJogo está undefined!");
     } else {
-        jogoModel.listar(idUsuario, idJogo).then(resultado => {
+        jogoModel.pegarStatus(idUsuario, idJogo).then(resultado => {
             console.log(`\nResultados encontrados: ${resultado.length}`);
             console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
 
@@ -36,15 +36,21 @@ function cadastrarStatus(request, response) {
     let idUsuario = request.body.idUsuarioServer;
     let idJogo = request.body.idJogoServer;
     let status = request.body.statusServer;
+    let imagem = request.body.imagemServer;
+    let titulo = request.body.tituloServer;
 
     if (idUsuario == undefined) {
-        res.status(400).send("Seu idUsuario está undefined!");
+        response.status(400).send("Seu idUsuario está undefined!");
     } else if (idJogo == undefined) {
-        res.status(400).send("Seu idJogo está undefined!");
+        response.status(400).send("Seu idJogo está undefined!");
     } else if (status == undefined) {
-        res.status(400).send("Seu status está undefined!");
+        response.status(400).send("Seu status está undefined!");
+    } else if (imagem == undefined) {
+        response.status(400).send("Sua imagem está undefined!");
+    } else if (titulo == undefined) {
+        response.status(400).send("Seu titulo está undefined!");
     } else {
-        jogoModel.cadastrarStatus(idUsuario, idJogo, status).then(
+        jogoModel.cadastrarStatus(idUsuario, idJogo, status, imagem, titulo).then(
             function (resultado) {
                 response.json(resultado);
             }
@@ -67,11 +73,11 @@ function atualizarStatus(request, response) {
     let status = request.body.statusServer;
 
     if (idUsuario == undefined) {
-        res.status(400).send("Seu idUsuario está undefined!");
+        response.status(400).send("Seu idUsuario está undefined!");
     } else if (idJogo == undefined) {
-        res.status(400).send("Seu idJogo está undefined!");
+        response.status(400).send("Seu idJogo está undefined!");
     } else if (status == undefined) {
-        res.status(400).send("Seu status está undefined!");
+        response.status(400).send("Seu status está undefined!");
     } else {
         jogoModel.atualizarStatus(idUsuario, idJogo, status).then(
             function (resultado) {
@@ -90,9 +96,30 @@ function atualizarStatus(request, response) {
     }
 }
 
+function listarMeusJogos(request, response) {
+    let idUsuario = request.body.idUsuarioServer;
+
+    if (idUsuario == undefined) {
+        res.status(400).send("Seu idUsuario está undefined!");
+    } else {
+        jogoModel.listarMeusJogos(idUsuario).then(resultado => {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length > 0) {
+                console.log(resultado);
+                response.json(resultado);
+            } else {
+                response.status(403).send("Nenhum status de jogo encontrado");
+            }
+        });
+    }
+}
+
 module.exports = {
-    listar,
+    pegarStatus,
     testar,
     cadastrarStatus,
-    atualizarStatus
+    atualizarStatus,
+    listarMeusJogos
 }

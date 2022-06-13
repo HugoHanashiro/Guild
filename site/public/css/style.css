@@ -373,3 +373,43 @@ nav img {
     margin: 0px;
     margin-bottom: 10px;
 }
+
+/* My Games */
+
+.containerMyGames {
+    height: 100vh;
+    background-color: #333333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.containerMyGames h1 {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.containerMyGames ul {
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+}
+
+.containerMyGames ul li {
+    background-color: red;
+    list-style: none;
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    /* background: url('https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg') no-repeat left center; */
+    box-shadow: inset 0 0 0 1000px rgba(0,0,0, 0.7);
+    /* background-size: cover; */
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}

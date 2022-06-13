@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <script src="./js/funcoes.js"></script>
+    <title>Guild</title>
+</head>
+
+<body onload="checkLogin(); getMyGames()">
+    <nav>
+        <div class="container">
+            <div class="navLeft">
+                <a href="./index.html">
+                    <div class="logoContainer">
+                        <img src="./assets/logos/left_white_no-bg.png" alt="">
+                    </div>
+                </a>
+                <ul>
+                    <li><a href="./index.html">Início</a></li>
+                    <li><a href="./games.html">Jogos</a></li>
+                </ul>
+                <button onclick="getGameStatus()">Testar</button>
+            </div>
+            <div class="navRight">
+                <ul>
+                    <li>Perfil</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container containerMyGames">
+        <h1>Meus Jogos</h1>
+        <ul id="myGamesList">
+        </ul>
+    </div>
+</body>
+<script>
+    function getMyGames() {
+        fetch('/jogos/listarMeusJogos', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.getItem('idUsuario')
+            })
+        }).then(resultado => {
+            resultado.json().then(resultadoJSON => {
+                resultadoJSON.forEach(gameReturned => {
+                    renderGame(gameReturned);
+                });
+            })
+        })
+    }
+
+    function renderGame(gameParam) {
+        let gameListElement = document.getElementById('myGamesList');
+
+        let liElement = document.createElement('li');
+        let divTitle = document.createElement('div');
+        let divStatus = document.createElement('div');
+
+        liElement.classList.add('myGameListItem');
+        divTitle.classList.add('myGameTitle');
+        divStatus.classList.add('myGameStatus');
+
+        divTitle.innerHTML = gameParam.titulo;//DINÂMICO
+        divStatus.innerHTML = gameParam.statusUsuarioJogo;//DINÂMICO
+        liElement.style.background = `url('${gameParam.imagem}') no-repeat left center`;//DINÂMICO
+        liElement.style.backgroundSize = "cover";
+
+        liElement.appendChild(divTitle);
+        liElement.appendChild(divStatus);
+
+        gameListElement.appendChild(liElement);
+    }
+</script>
+
+</html>
