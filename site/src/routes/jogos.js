@@ -28,4 +28,12 @@ router.post("/cadastrarGenero", function (req, res) {
     jogoController.cadastrarGenero(req, res);
 })
 
+router.post("/listarOcorrenciasPorStatus", function (req, res) {
+    jogoController.listarOcorrenciasPorStatus(req, res);
+});
+
+router.post("/listarOcorrenciasPorGenero", function (req, res) {
+    jogoController.listarOcorrenciasPorGenero(req, res);
+});
+
 module.exports = router;

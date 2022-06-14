@@ -34,6 +34,5 @@ SELECT idRegistro FROM Usuario_Jogo WHERE fkUsuario = 1 AND idJogo = 3498;
 SELECT * FROM Usuario_Jogo;
 SELECT * FROM Genero;
 
-SELECT DISTINCT nomeGenero FROM Genero;
-SELECT COUNT(DISTINCT nomeGenero) FROM Genero;
-SELECT COUNT(*) AS 'Ocorrencias' FROM Genero WHERE nomeGenero = 'RPG';
+SELECT statusUsuarioJogo, COUNT(*) AS 'ocorrencias' FROM Usuario_Jogo GROUP BY statusUsuarioJogo;
+SELECT nomeGenero, COUNT(*) AS 'ocorrencias' FROM Genero GROUP BY nomeGenero;

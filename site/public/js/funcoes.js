@@ -8,6 +8,6 @@ function checkLogin() {
 
     if (idUsuario == null) {
         console.log(`usuário não está logado, voltando à pagina de login`);
-        window.location = "./sing-in.html";
+        window.location = "./sign-in.html";
     }
 }

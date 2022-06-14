@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <script src="./js/funcoes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>Guild</title>
+</head>
+
+<body onload="checkLogin(); setupStats();">
+    <nav>
+        <div class="container">
+            <div class="navLeft">
+                <a href="./index.html">
+                    <div class="logoContainer">
+                        <img src="./assets/logos/left_white_no-bg.png" alt="">
+                    </div>
+                </a>
+                <ul>
+                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./myGames.html">Meus Jogos</a></li>
+                </ul>
+                <button onclick="registerGenres()">Testar</button>
+            </div>
+            <div class="navRight">
+                <ul>
+                    <li><a href="#" onclick="limparSessao()">Sair</a></li>
+                    <li><a href="./stats.html">Estatísticas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container containerStats">
+        <h1>Estatísticas</h1>
+        <div class="statsBoxesContainer">
+            <div class="statsBox">
+                Terminados
+                <span id="spnStatBoxBeaten"></span>
+            </div>
+            <div class="statsBox">
+                Recorrentes
+                <span id="spnStatBoxAlways"></span>
+            </div>
+            <div class="statsBox">
+                Jogando
+                <span id="spnStatBoxPlaying"></span>
+            </div>
+            <div class="statsBox">
+                Jogados
+                <span id="spnStatBoxPlayed"></span>
+            </div>
+            <div class="statsBox">
+                Quer jogar
+                <span id="spnStatBoxWish"></span>
+            </div>
+            <div class="statsBox favoriteGenreBox">
+                Genero Favorito
+                <span id="spnFavoriteGenre"></span>
+            </div>
+        </div>
+        <h2>Jogos por Status</h2>
+        <div class="statusChartContainer" id="statusChartContainer">
+        </div>
+        <h2>Jogos por Gênero</h2>
+        <div class="genresChartContainer" id="genresChartContainer">
+        </div>
+    </div>
+</body>
+
+<script>
+</script>
+
+<script>
+    let statusList = [];
+    let statusOcurrences = [];
+    let genresList = [];
+    let genresOcurrences = [];
+    let jsonStatus;
+    let jsonGenres;
+    let contWish = 0;
+    let contBeaten = 0;
+    let contAlways = 0;
+    let contPlaying = 0;
+    let contPlayed = 0;
+
+    function setupStats() {
+        getStatsByRegistry().then(function () {
+            getBoxesStats();
+        });
+    }
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', { 'packages': ['corechart'] });
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    // google.charts.setOnLoadCallback(drawChart);
+
+    async function getStatsByRegistry() {
+        let statusFetchResult = await fetch('/jogos/listarOcorrenciasPorStatus/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        let genresFetchResult = await fetch('/jogos/listarOcorrenciasPorGenero/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        jsonStatus = await statusFetchResult.json();
+        jsonGenres = await genresFetchResult.json();
+
+        jsonStatus.forEach(statusElement => {
+            statusList.push(statusElement.statusUsuarioJogo);
+            statusOcurrences.push(statusElement.ocorrencias);
+        });
+
+        jsonGenres.forEach(genreElement => {
+            genresList.push(genreElement.nomeGenero);
+            genresOcurrences.push(genreElement.ocorrencias);
+        })
+
+        // console.log(`Status list: ${statusList}`);
+        // console.log(`Status ocurrences: ${statusOcurrences}`);
+
+        // console.log(`Genres list: ${genresList}`);
+        // console.log(`Genres ocurrences: ${genresOcurrences}`);
+
+
+        drawStatusChart(statusList, statusOcurrences);
+        drawGenresChart(genresList, genresOcurrences);
+    }
+
+    function drawStatusChart(statusList, statusOcurrences) {
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Ocorrencias');
+        // data.addRows([
+        //     ['Mushrooms', 3],
+        //     ['Onions', 1],
+        //     ['Olives', 1],
+        //     ['Zucchini', 1],
+        //     ['Pepperoni', 2]
+        // ]);
+        for (let i = 0; i < statusList.length; i++) {
+            data.addRow([statusList[i], statusOcurrences[i]]);
+        }
+
+        // Set chart options
+        var options = {
+            'title': 'Gráfico de jogos por status',
+            backgroundColor: { fill: 'transparent' }
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('statusChartContainer'));
+        chart.draw(data, options);
+    }
+
+    function drawGenresChart(genresList, genresOcurrences) {
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Ocorrencias');
+        // data.addRows([
+        //     ['Mushrooms', 3],
+        //     ['Onions', 1],
+        //     ['Olives', 1],
+        //     ['Zucchini', 1],
+        //     ['Pepperoni', 2]
+        // ]);
+        for (let i = 0; i < genresList.length; i++) {
+            data.addRow([genresList[i], genresOcurrences[i]]);
+        }
+
+        // Set chart options
+        var options = {
+            'title': 'Gráfico de jogos por gênero',
+            backgroundColor: { fill: 'transparent' }
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('genresChartContainer'));
+        chart.draw(data, options);
+    }
+
+    function getBoxesStats() {
+        // console.log(jsonStatus);
+        // console.log(jsonGenres);
+        jsonStatus.forEach(statusObject => {
+            if (statusObject.statusUsuarioJogo == 'wish') {
+                contWish = statusObject.ocorrencias;
+            } else if (statusObject.statusUsuarioJogo == 'beaten') {
+                contBeaten = statusObject.ocorrencias;
+            } else if (statusObject.statusUsuarioJogo == 'always') {
+                contAlways = statusObject.ocorrencias;
+            } else if (statusObject.statusUsuarioJogo == 'playing') {
+                contPlaying = statusObject.ocorrencias;
+            } else if (statusObject.statusUsuarioJogo == 'played') {
+                contPlayed = statusObject.ocorrencias;
+            }
+            document.getElementById('spnStatBoxBeaten').innerHTML = contBeaten;
+            document.getElementById('spnStatBoxAlways').innerHTML = contAlways;
+            document.getElementById('spnStatBoxPlaying').innerHTML = contPlaying;
+            document.getElementById('spnStatBoxPlayed').innerHTML = contPlayed;
+            document.getElementById('spnStatBoxWish').innerHTML = contWish;
+            document.getElementById('spnFavoriteGenre').innerHTML = genresList[0];
+        });
+        // console.log(`Wish: ${contWish}`);
+        // console.log(`Beaten: ${contBeaten}`);
+        // console.log(`Always: ${contAlways}`);
+        // console.log(`Playing: ${contPlaying}`);
+        // console.log(`Played: ${contPlayed}`);
+    }
+</script>
+
+</html>

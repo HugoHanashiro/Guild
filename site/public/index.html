@@ -11,6 +11,28 @@
 </head>
 
 <body onload="teste();">
+    <nav>
+        <div class="container">
+            <div class="navLeft">
+                <a href="./index.html">
+                    <div class="logoContainer">
+                        <img src="./assets/logos/left_white_no-bg.png" alt="">
+                    </div>
+                </a>
+                <ul>
+                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./myGames.html">Meus Jogos</a></li>
+                </ul>
+                <button onclick="registerGenres()">Testar</button>
+            </div>
+            <div class="navRight">
+                <ul>
+                    <li><a href="#" onclick="limparSessao()">Sair</a></li>
+                    <li><a href="./stats.html">Estatísticas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <h1>index!</h1>
     <span id="spnMsg"></span>
     <a href="games.html">Games</a>
@@ -22,7 +44,7 @@
         if (idUsuario == null) {
             spnMsg.innerHTML = "Usuário não está logado<br>";
             console.log(`id do usuário: ${idUsuario}`);
-            window.location = "./sing-in.html";
+            window.location = "./sign-in.html";
         } else {
             spnMsg.innerHTML = "Usuário está logado";
             console.log(`id do usuário: ${idUsuario}`);
