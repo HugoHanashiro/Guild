@@ -23,10 +23,9 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./index.html">Jogos</a></li>
                     <li><a href="./myGames.html">Meus Jogos</a></li>
                 </ul>
-                <button onclick="registerGenres()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -58,6 +57,10 @@
             <div class="statsBox">
                 Quer jogar
                 <span id="spnStatBoxWish"></span>
+            </div>
+            <div class="statsBox">
+                Total
+                <span id="spnStatBoxTotal"></span>
             </div>
             <div class="statsBox favoriteGenreBox">
                 Genero Favorito
@@ -135,8 +138,7 @@
         // console.log(`Genres list: ${genresList}`);
         // console.log(`Genres ocurrences: ${genresOcurrences}`);
 
-
-        drawStatusChart(statusList, statusOcurrences);
+        drawStatusChart(translateStatusList(statusList), statusOcurrences);
         drawGenresChart(genresList, genresOcurrences);
     }
 
@@ -223,6 +225,7 @@
             document.getElementById('spnStatBoxPlayed').innerHTML = contPlayed;
             document.getElementById('spnStatBoxWish').innerHTML = contWish;
             document.getElementById('spnFavoriteGenre').innerHTML = genresList[0];
+            document.getElementById('spnStatBoxTotal').innerHTML = contBeaten + contAlways + contPlaying + contPlayed + contWish;
         });
         // console.log(`Wish: ${contWish}`);
         // console.log(`Beaten: ${contBeaten}`);

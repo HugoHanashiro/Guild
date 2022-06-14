@@ -258,7 +258,7 @@ nav img {
 
 .gameList .game {
     width: 200px;
-    height: 230px;
+    height: 200px;
     display: flex;
     flex-direction: column;
     /* background-color: #333333; */
@@ -271,7 +271,7 @@ nav img {
 }
 
 .game .imageContainer {
-    height: 55%;
+    height: 65%;
     width: 100%;
     /* background-color: red; */
 }
@@ -284,7 +284,7 @@ nav img {
 }
 
 .game .gameInfoContainer {
-    height: 45%;
+    height: 35%;
     box-sizing: border-box;
     padding: 10px;
     background: rgb(51, 51, 51);
@@ -293,14 +293,25 @@ nav img {
     border-bottom-right-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
 .containerButtons {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+    margin: 15px 0px;
+}
+
+.containerButtons button {
+    width: 40px;
+    height: 40px;
+}
+
+.containerButtons button img {
+    height: 100%;
+    width: 100%;
 }
 
 /* Página de detalhes do jogo */
@@ -399,7 +410,7 @@ nav img {
 }
 
 .containerMyGames ul li {
-    background-color: red;
+    /* background-color: red; */
     list-style: none;
     padding: 20px;
     margin: 0;
@@ -407,11 +418,23 @@ nav img {
     justify-content: space-between;
     box-sizing: border-box;
     /* background: url('https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg') no-repeat left center; */
-    box-shadow: inset 0 0 0 1000px rgba(0,0,0, 0.7);
+    box-shadow: inset 0 0 0 1000px rgba(0,0,0, 0.85);
     /* background-size: cover; */
     background-color: rgba(0, 0, 0, 1);
     border-radius: 15px;
     margin-bottom: 10px;
+    cursor: pointer;
+    min-height: 100px;
+    align-items: center;
+}
+
+.containerMyGames .myGamesTableTitleContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.containerMyGames .myGamesTableTitleContainer h2{
+    margin: 0px;
 }
 
 /* Stats page */

@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Guild</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="./assets/logos/icone-no-bg.png">
+    <script src="./js/funcoes.js"></script>
 </head>
 
-<body onload="teste();">
+<body onload="checkLogin(); listPopularGames();">
+    <!-- <button onclick="getGames()">addsads</button> -->
     <nav>
         <div class="container">
             <div class="navLeft">
@@ -20,10 +22,9 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./index.html">Jogos</a></li>
                     <li><a href="./myGames.html">Meus Jogos</a></li>
                 </ul>
-                <button onclick="registerGenres()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -33,23 +34,119 @@
             </div>
         </div>
     </nav>
-    <h1>index!</h1>
-    <span id="spnMsg"></span>
-    <a href="games.html">Games</a>
+    <div class="container">
+        <div class="containerCaixaPesquisa">
+            <div class="searchBox">
+                <input type="text" id="iptSearch" placeholder="Digite algum jogo para pesquisar...">
+                <button onclick="search()"><img src="./assets/lupa.png" alt="ícone de lupa"></button>
+            </div>
+        </div>
+        <div class="gameList">
+        </div>
+        <div class="containerButtons">
+            <button onclick="loadPreviousPage()" id="btnPreviousPage"><img src="./assets/left-arrow.png" alt="Image with an arrow pointing to the left"></button>
+            <button onclick="loadNextPage()" id="btnNextPage"><img src="./assets/right-arrow.png" alt="Image with an arrow pointing to the right"></button>
+        </div>
+    </div>
 </body>
 <script>
-    function teste() {
-        let idUsuario = sessionStorage.getItem('idUsuario');
+    const URL_STANDARD = "https://api.rawg.io/api/games?key=5b06bc2830814ff68b37e463110cdf72&page_size=30";
+    const API_KEY = "5b06bc2830814ff68b37e463110cdf72";
+    let nextPageUrl = null;
+    let previousPageUrl = null;
 
-        if (idUsuario == null) {
-            spnMsg.innerHTML = "Usuário não está logado<br>";
-            console.log(`id do usuário: ${idUsuario}`);
-            window.location = "./sign-in.html";
-        } else {
-            spnMsg.innerHTML = "Usuário está logado";
-            console.log(`id do usuário: ${idUsuario}`);
+    document.getElementById('iptSearch').addEventListener('keydown', event => {
+        if (event.key === "Enter" && document.getElementById('iptSearch').value != "") {
+            search();
         }
+    })
+
+    function listPopularGames() {
+        listGames(URL_STANDARD);
     }
+
+    function listGames(URL) {
+        getGames(URL).then(response => {
+            nextPageUrl = response.next;
+            previousPageUrl = response.previous;
+            if(nextPageUrl == null) {
+                document.getElementById('btnNextPage').setAttribute('disabled', 'true');
+            } else {
+                document.getElementById('btnNextPage').removeAttribute('disabled');
+            }
+            if(previousPageUrl == null) {
+                document.getElementById('btnPreviousPage').setAttribute('disabled', 'true');
+            } else {
+                document.getElementById('btnPreviousPage').removeAttribute('disabled');
+            }
+            response.results.forEach(gameOnList => {
+                renderGame(gameOnList);
+            })
+        })
+    }
+
+    async function getGames(url) {
+        const fetchResponse = await fetch(url);
+        let responseJSON = await fetchResponse.json();
+        return responseJSON;
+    }
+
+    function renderGame(game) {
+        let gameList = document.getElementsByClassName('gameList')[0];
+
+        let gameElement = document.createElement('div');
+        gameElement.classList.add('game');
+        gameElement.addEventListener('click', function() {
+            window.location = `game.html?gameId=${game.id}`;
+        })
+        gameList.appendChild(gameElement);
+
+        let imageContainer = document.createElement('div');
+        imageContainer.classList.add('imageContainer');
+        gameElement.appendChild(imageContainer);
+
+        let gameInfoContainer = document.createElement('div');
+        gameElement.appendChild(gameInfoContainer);
+
+        let imageElement = document.createElement('img');
+        let gameTitle = document.createElement('div');
+        let gameMetacritic = document.createElement('div');
+
+        imageElement.src = game.background_image; //IMAGEM - DINÂMICO
+        gameTitle.textContent = game.name;//TÍTULO - DINÂMICO
+
+        gameInfoContainer.classList.add('gameInfoContainer');
+        gameTitle.classList.add('gameTitle');
+
+        imageContainer.appendChild(imageElement);
+        gameInfoContainer.appendChild(gameTitle);
+    }
+
+    function search() {
+        let searchQuery = document.getElementById('iptSearch').value;
+        let searchUrl = URL_STANDARD + `&search_precise=true&search=${searchQuery}`;
+
+        // nextPageUrl = null;
+        // previousPageUrl = null;
+
+        emptyGameList();
+        listGames(encodeURI(searchUrl));
+    }
+
+    function emptyGameList() {
+        document.getElementsByClassName('gameList')[0].innerHTML = "";
+    }
+
+    function loadNextPage() {
+        emptyGameList();
+        listGames(nextPageUrl)
+    }
+
+    function loadPreviousPage() {
+        emptyGameList();
+        listGames(previousPageUrl);
+    }
+
 </script>
 
 </html>

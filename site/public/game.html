@@ -21,10 +21,9 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./index.html">Jogos</a></li>
                     <li><a href="./myGames.html">Meus Jogos</a></li>
                 </ul>
-                <button onclick="registerGenres()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -71,7 +70,7 @@
     if (params.has('gameId')) {
         gameId = params.get('gameId');
     } else {
-        window.location = "./games.html";
+        window.location = "./index.html";
     }
 
     async function getGameDetails() {

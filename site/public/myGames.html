@@ -21,10 +21,9 @@
                     </div>
                 </a>
                 <ul>
-                    <li><a href="./games.html">Jogos</a></li>
+                    <li><a href="./index.html">Jogos</a></li>
                     <li><a href="./myGames.html">Meus Jogos</a></li>
                 </ul>
-                <button onclick="registerGenres()">Testar</button>
             </div>
             <div class="navRight">
                 <ul>
@@ -37,6 +36,10 @@
 
     <div class="container containerMyGames">
         <h1>Meus Jogos</h1>
+        <div class="myGamesTableTitleContainer">
+            <h2>Título</h2>
+            <h2>Status</h2>
+        </div>
         <ul id="myGamesList">
         </ul>
     </div>
@@ -64,6 +67,9 @@
         let gameListElement = document.getElementById('myGamesList');
 
         let liElement = document.createElement('li');
+        liElement.addEventListener('click', function() {
+            window.location = `game.html?gameId=${gameParam.idJogo}`;
+        })
         let divTitle = document.createElement('div');
         let divStatus = document.createElement('div');
 
@@ -72,7 +78,7 @@
         divStatus.classList.add('myGameStatus');
 
         divTitle.innerHTML = gameParam.titulo;//DINÂMICO
-        divStatus.innerHTML = gameParam.statusUsuarioJogo;//DINÂMICO
+        divStatus.innerHTML = translateStatus(gameParam.statusUsuarioJogo);//DINÂMICO
         liElement.style.background = `url('${gameParam.imagem}') no-repeat left center`;//DINÂMICO
         liElement.style.backgroundSize = "cover";
 

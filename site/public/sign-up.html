@@ -64,6 +64,18 @@
                 title: 'Erro',
                 text: 'Os campos "Senha" e "Confirmar senha" contêm dados diferentes'
             });
+        } else if(!validateEmail(emailVar)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Digite um e-mail válido!'
+            });
+        }  else if(!validatePasswordStrength(senhaVar)){
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Sua senha não é forte o suficiente. Ela deve conter 8 caracteres, uma letra maiúscula, uma letra minúscula, um dígito e um caractere especial'
+            });
         } else {
             fetch("/usuarios/cadastrar", {
                 method: "POST",
@@ -110,6 +122,16 @@
                 }
             })
         }
+    }
+
+    function validatePasswordStrength(PasswordParam) {
+        let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+        return strongPassword.test(PasswordParam);
+    }
+
+    function validateEmail(EmailParam) {
+        let emailFormat = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]');
+        return emailFormat.test(EmailParam);
     }
 </script>
 
