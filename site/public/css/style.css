@@ -24,6 +24,7 @@ nav {
     display: flex;
     justify-content: center;
     color: #ffffff;
+    z-index: 999;
 }
 
 nav .container {

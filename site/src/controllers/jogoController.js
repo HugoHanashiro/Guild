@@ -169,37 +169,49 @@ function cadastrarGenero(request, response) {
 }
 
 function listarOcorrenciasPorStatus(req, res) {
-    jogoModel.listarOcorrenciasPorStatus()
-        .then(function (resultado) {
-            if (resultado.length > 0) {
-                res.status(200).json(resultado);
-            } else {
-                res.status(204).send("Nenhum resultado encontrado!")
-            }
-        }).catch(
-            function (erro) {
-                console.log(erro);
-                console.log("Houve um erro ao obter as os registros por status! Erro: ", erro.sqlMessage);
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
+    let idUsuario = req.body.idUsuarioServer;
+
+    if (idUsuario == undefined) {
+        response.status(400).send("Seu idUsuario está undefined!");
+    } else {
+        jogoModel.listarOcorrenciasPorStatus(idUsuario)
+            .then(function (resultado) {
+                if (resultado.length > 0) {
+                    res.status(200).json(resultado);
+                } else {
+                    res.status(204).send("Nenhum resultado encontrado!")
+                }
+            }).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log("Houve um erro ao obter as os registros por status! Erro: ", erro.sqlMessage);
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
 }
 
 function listarOcorrenciasPorGenero(req, res) {
-    jogoModel.listarOcorrenciasPorGenero()
-        .then(function (resultado) {
-            if (resultado.length > 0) {
-                res.status(200).json(resultado);
-            } else {
-                res.status(204).send("Nenhum resultado encontrado!")
-            }
-        }).catch(
-            function (erro) {
-                console.log(erro);
-                console.log("Houve um erro ao obter as os registros por gênero! Erro: ", erro.sqlMessage);
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
+    let idUsuario = req.body.idUsuarioServer;
+
+    if (idUsuario == undefined) {
+        response.status(400).send("Seu idUsuario está undefined!");
+    } else {
+        jogoModel.listarOcorrenciasPorGenero(idUsuario)
+            .then(function (resultado) {
+                if (resultado.length > 0) {
+                    res.status(200).json(resultado);
+                } else {
+                    res.status(204).send("Nenhum resultado encontrado!")
+                }
+            }).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log("Houve um erro ao obter as os registros por gênero! Erro: ", erro.sqlMessage);
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
 }
 
 module.exports = {

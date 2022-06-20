@@ -109,14 +109,20 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.getItem('idUsuario'),
+            })
         });
 
         let genresFetchResult = await fetch('/jogos/listarOcorrenciasPorGenero/', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({
+                idUsuarioServer: sessionStorage.getItem('idUsuario'),
+            })
         });
 
         jsonStatus = await statusFetchResult.json();
@@ -135,8 +141,8 @@
         // console.log(`Status list: ${statusList}`);
         // console.log(`Status ocurrences: ${statusOcurrences}`);
 
-        // console.log(`Genres list: ${genresList}`);
-        // console.log(`Genres ocurrences: ${genresOcurrences}`);
+        console.log(`Genres list: ${genresList}`);
+        console.log(`Genres ocurrences: ${genresOcurrences}`);
 
         drawStatusChart(translateStatusList(statusList), statusOcurrences);
         drawGenresChart(genresList, genresOcurrences);
